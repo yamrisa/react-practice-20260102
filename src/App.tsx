@@ -1,35 +1,65 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react"; //Reactのライブラリから必要なHooksの読み込み
 
-function App() {
-  const [count, setCount] = useState(0)
+// 型宣言
+type Status = "todo" | "doing" | "done"
 
-  return (
+type Todo = {
+  id: number
+  title: string
+  status: Status
+}
+
+function App(){
+  // const [count, setCount] = useState(0) //初回レンダリング時読まれる、初期値の状態定義
+  
+  // state定義、Todo型の空の配列を用意
+  const [todos, setTodos] = useState<Todo[]>([]) //useState<型>(初期値)
+  const [inputTitle, setInputTitle] = useState("")
+
+  function addTodo(title: string){ //handleAddのinputTitleを受け取る
+    const newTodo:Todo = {
+      id: Date.now(),
+      title,
+      status: "todo",
+    }
+
+    setTodos(prev => [...prev, newTodo])
+  }
+
+  function handleAdd(){ //ボタン押したらaddtitleへ引数渡す
+    if (inputTitle.trim() === "") return //バリデーション
+
+    addTodo(inputTitle)
+    setInputTitle("")
+  }
+
+  return ( //JSXで返す内容
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1>React Practice</h1>
+      {/* <button onClick={() => setCount(count + 1)}> クリックされたらsetCountを実行し再描画 */}
+        {/* count: {count} */}
+      {/* </button> */}
+
+      <input 
+        type="text"
+        value={inputTitle}
+        onChange={(e) => setInputTitle(e.target.value)} 
+      />
+
+      <button onClick={handleAdd}>
+        追加
+      </button>
+
+      <ul>
+        {todos.map(todo => (
+          <li key={todo.id}>
+            {todo.title} [{todo.status}]
+          </li>
+        ))}
+      </ul>
+
     </>
   )
 }
 
-export default App
+export default App //main.tsxでimportAppfrom'./App'できる
