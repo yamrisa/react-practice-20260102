@@ -33,6 +33,10 @@ function App(){
     setInputTitle("")
   }
 
+  function deleteTodo(id: number) {
+    setTodos (prev => prev.filter(todo => todo.id !== id))
+  }
+
   return ( //JSXで返す内容
     <>
       <h1>React Practice</h1>
@@ -54,6 +58,9 @@ function App(){
         {todos.map(todo => (
           <li key={todo.id}>
             {todo.title} [{todo.status}]
+            <button onClick={() => deleteTodo(todo.id)}>
+              削除
+            </button>
           </li>
         ))}
       </ul>
